@@ -7,3 +7,12 @@ export async function getAllItems() {
 
     return response.data;
 }
+
+export async function addItem(item) {
+    const response = await client
+        .from('shopping')
+        .insert(item)
+        .single();
+
+    return response.data;
+}
