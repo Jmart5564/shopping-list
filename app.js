@@ -1,22 +1,21 @@
 import { getUser, signOut } from './services/auth-service.js';
 import { protectPage } from './utils.js';
 import createUser from './components/User.js';
-import { getAllItems, addItem } from './shopping-service.js';
+import { getAllItems, addItem } from './services/shopping-service.js';
 import createAddItem from './components/AddItem.js';
-
-const form = document.querySelector('#add-item-form');
+import createItemList from './components/List.js';
 
 
 // State
 let user = null;
-let items = [];
+let list = [];
 
 // Action Handlers
 async function handlePageLoad() {
     user = getUser();
     protectPage(user);
 
-    items = await getAllItems();
+    list = await getAllItems();
 
     display();
 }
@@ -26,12 +25,10 @@ async function handleSignOut() {
 }
 
 
-async function handleAdd(item) {
-    const item = await addItem({
-        description: item,
-        complete: false 
-    });
-    items.push(item);
+async function handleAdd(item, quantity) {
+    const newItem = await addItem(item, quantity);
+
+    list.push(newItem);
     
     display();
 }
@@ -42,10 +39,14 @@ const User = createUser(
     { handleSignOut }
 );
 
-const AddItem = createAddItem(document.querySelector()) 
+const ItemList = createItemList(document.querySelector('.list'));
+
+const AddItem = createAddItem(document.querySelector('#form'), { handleAdd }); 
 
 function display() {
     User({ user });
+    AddItem();
+    ItemList({ list });
 
 }
 

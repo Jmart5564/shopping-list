@@ -8,10 +8,10 @@ export async function getAllItems() {
     return response.data;
 }
 
-export async function addItem(item) {
+export async function addItem(item, quantity) {
     const response = await client
         .from('shopping')
-        .insert(item)
+        .insert(item, quantity)
         .single();
 
     return response.data;
